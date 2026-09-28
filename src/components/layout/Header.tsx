@@ -170,10 +170,9 @@ export function Header({ services, groups }: HeaderProps) {
           >
             <Logo className="h-7 w-auto lg:h-8" />
             <span aria-hidden="true" className="h-7 w-px bg-navy-900/15" />
-            <span aria-hidden="true" className="text-[0.8125rem] font-semibold leading-[1.15] tracking-[-0.01em]">
-              Mühendislik
-              <br />
-              Çözümleri
+            <span aria-hidden="true" className="flex flex-col leading-[1.15] tracking-[-0.01em]">
+              <span className="text-[0.9375rem] font-bold">MES Mühendislik</span>
+              <span className="text-[0.75rem] font-medium text-navy-900/70">Mekanik Endüstriyel Sistemler</span>
             </span>
           </Link>
 
