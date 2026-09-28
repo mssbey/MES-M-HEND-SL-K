@@ -61,13 +61,39 @@ export interface SiteConfig {
   legal: LegalInfo;
 }
 
+/**
+ * Sitenin kanonik adresi. Öncelik sırası:
+ * 1. NEXT_PUBLIC_SITE_URL (boş bırakılabilir, "https://" yazılmasa da olur)
+ * 2. Vercel'in üretim alan adı (VERCEL_PROJECT_PRODUCTION_URL)
+ * 3. Vercel'in dağıtım adresi (VERCEL_URL — önizleme / deneme)
+ * 4. https://www.mes.com.tr
+ */
+function resolveSiteUrl() {
+  const candidates = [
+    process.env.NEXT_PUBLIC_SITE_URL,
+    process.env.VERCEL_PROJECT_PRODUCTION_URL,
+    process.env.VERCEL_URL,
+  ];
+  for (const raw of candidates) {
+    const value = raw?.trim();
+    if (!value) continue;
+    try {
+      const url = new URL(/^https?:\/\//i.test(value) ? value : `https://${value}`);
+      return url.origin;
+    } catch {
+      // Geçersiz değer: bir sonraki adaya geç.
+    }
+  }
+  return "https://www.mes.com.tr";
+}
+
 export const siteConfig: SiteConfig = {
   name: "MES Mühendislik Çözümleri",
   shortName: "MES Mühendislik",
   slogan: "Mekanik Tesisatta Güvenilir Mühendislik Çözümleri.",
   description:
     "Mekanik tesisat, doğalgaz, yangın, havalandırma ve iklimlendirme, sıhhi tesisat ile klima, kombi ve radyatör sistemlerinde projelendirmeden uygulamaya mühendislik çözümleri.",
-  url: (process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.mes.com.tr").replace(/\/$/, ""),
+  url: resolveSiteUrl(),
   locale: "tr_TR",
   contact: {
     person: "Emin Şaplı",
