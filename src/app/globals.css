@@ -1,26 +1,183 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/* ---------------------------------------------------------------------------
+   Tasarım belirteçleri — kartvizitteki lacivert (#142446) temel alınmıştır.
+   --------------------------------------------------------------------------- */
+@theme {
+  --color-navy-50: #eef2f9;
+  --color-navy-100: #dbe3f0;
+  --color-navy-200: #b7c5dd;
+  --color-navy-300: #8ea3c6;
+  --color-navy-400: #5f79a6;
+  --color-navy-500: #3f5a88;
+  --color-navy-600: #2c4570;
+  --color-navy-700: #213760;
+  --color-navy-800: #1a2d52;
+  --color-navy-900: #142446;
+  --color-navy-950: #0b1630;
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  --color-accent-50: #f0f6fc;
+  --color-accent-100: #deebf8;
+  --color-accent-200: #bcd7f0;
+  --color-accent-300: #8dbbe5;
+  --color-accent-400: #5d9bd6;
+  --color-accent-500: #3b7fc0;
+  --color-accent-600: #2c68a3;
+  --color-accent-700: #245586;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  --color-paper: #ffffff;
+  --color-bone: #f7f6f2;
+  --color-bone-200: #efede6;
+  --color-line: #e4e2da;
+  --color-line-strong: #cfccc1;
+  --color-ink: #0f1b33;
+  --color-muted: #545e72;
+
+  --ease-drawing: cubic-bezier(0.6, 0.1, 0.2, 1);
+
+  --animate-draw: draw 2.4s var(--ease-drawing) forwards;
+  --animate-flow: flow 1.4s linear infinite;
+  --animate-fade-up: fade-up 0.8s var(--ease-drawing) both;
+
+  @keyframes draw {
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+  @keyframes flow {
+    to {
+      stroke-dashoffset: -24;
+    }
+  }
+  @keyframes fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@theme inline {
+  --font-sans: var(--font-manrope), ui-sans-serif, system-ui, "Segoe UI", sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, "SFMono-Regular", Consolas, monospace;
+}
+
+@layer base {
+  html {
+    color-scheme: light;
+    scroll-behavior: smooth;
+    scroll-padding-top: 6rem;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-feature-settings: "ss01", "cv11";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-accent-500);
+    outline-offset: 3px;
+  }
+
+  ::selection {
+    background: var(--color-navy-900);
+    color: #fff;
+  }
+
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    ::before,
+    ::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      animation-delay: 0s !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+/* Sayfa içerik genişliği ve kenar boşlukları */
+@utility container-site {
+  width: 100%;
+  max-width: 80rem;
+  margin-inline: auto;
+  padding-inline: 1rem;
+  @media (width >= 40rem) {
+    padding-inline: 1.5rem;
+  }
+  @media (width >= 64rem) {
+    padding-inline: 2rem;
+  }
+}
+
+/* Teknik çizim kâğıdı ızgarası */
+@utility bg-blueprint {
+  background-image:
+    linear-gradient(to right, rgb(20 36 70 / 0.07) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(20 36 70 / 0.07) 1px, transparent 1px),
+    linear-gradient(to right, rgb(20 36 70 / 0.035) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(20 36 70 / 0.035) 1px, transparent 1px);
+  background-size:
+    96px 96px,
+    96px 96px,
+    24px 24px,
+    24px 24px;
+}
+
+@utility bg-blueprint-dark {
+  background-image:
+    linear-gradient(to right, rgb(255 255 255 / 0.06) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(255 255 255 / 0.06) 1px, transparent 1px),
+    linear-gradient(to right, rgb(255 255 255 / 0.025) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(255 255 255 / 0.025) 1px, transparent 1px);
+  background-size:
+    96px 96px,
+    96px 96px,
+    24px 24px,
+    24px 24px;
+}
+
+/* SVG çizgi animasyonları (pathLength="1" ile kullanılır) */
+@utility draw-line {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: var(--animate-draw);
+}
+
+@utility flow-line {
+  stroke-dasharray: 4 8;
+  animation: var(--animate-flow);
+}
+
+/* Düzenlenebilir yasal metinlerde doldurulacak alan işareti */
+@utility placeholder-mark {
+  background: #fff4d6;
+  color: #6b4a00;
+  border-bottom: 1px dashed #b98900;
+  padding: 0 0.25em;
+  border-radius: 2px;
+  font-family: var(--font-mono);
+  font-size: 0.85em;
 }
